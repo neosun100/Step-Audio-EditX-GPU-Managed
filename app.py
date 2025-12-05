@@ -110,9 +110,35 @@ class EditxTab:
             # Use common_tts_engine for cloning
             self.add_log("📥 输入验证通过，开始克隆...")
             clone_start = time.time()
-            output_audio, output_sr = common_tts_engine.clone(
-                prompt_audio_input, prompt_text_input, generated_text
-            )
+            
+            # Check if this is a two-step operation
+            actual_edit_info = get_edit_info_key(edit_info) if edit_info else None
+            if actual_type in {"clone_with_emotion", "clone_with_style"}:
+                # Step 1: Clone with new text
+                self.add_log(f"🔄 Step 1/2: 克隆新文本...")
+                output_audio, output_sr = common_tts_engine.clone(
+                    prompt_audio_input, prompt_text_input, generated_text
+                )
+                
+                # Save cloned audio to temp file
+                if isinstance(output_audio, torch.Tensor):
+                    cloned_numpy = output_audio.cpu().numpy().squeeze()
+                else:
+                    cloned_numpy = output_audio
+                temp_cloned_path = save_audio("cloned_temp", cloned_numpy, output_sr, self.args.tmp_dir)
+                
+                # Step 2: Apply emotion or style
+                edit_type_for_step2 = "emotion" if "emotion" in actual_type else "style"
+                self.add_log(f"🎨 Step 2/2: 应用{edit_type_for_step2} ({actual_edit_info})...")
+                output_audio, output_sr = common_tts_engine.edit(
+                    temp_cloned_path, generated_text, edit_type_for_step2, actual_edit_info, generated_text
+                )
+            else:
+                # Normal clone
+                output_audio, output_sr = common_tts_engine.clone(
+                    prompt_audio_input, prompt_text_input, generated_text
+                )
+            
             clone_time = time.time() - clone_start
             self.add_log(f"✅ 克隆完成，耗时: {clone_time:.2f}s")
 
