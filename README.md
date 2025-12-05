@@ -22,10 +22,14 @@
 - 🎯 **Zero-shot Voice Cloning** - Clone any voice with just 3-10 seconds of audio
 - 🎭 **Emotion & Style Editing** - Support for dozens of emotions and speaking styles
 - 🗣️ **Paralinguistic Control** - Add breathing, laughter, sighs, and more
-- 🌍 **Multi-language Support** - Chinese, English, Sichuanese, Cantonese
+- 🌍 **Multi-language Support** - Chinese, English, Sichuanese, Cantonese, Japanese, Korean
+- 🆕 **Clone with Emotion/Style** - Clone voice + change text + apply emotion/style in one operation
+- 🌐 **Language Selector UI** - Easy language selection with radio buttons
 - 🎮 **GPU Memory Management** - Reduce idle GPU memory from 40GB to 3MB (99.99% savings)
 - ⚡ **Lazy Loading** - Models load on-demand, startup in 20 seconds
 - 🔄 **Auto Offload** - Automatic GPU↔CPU transfer after task completion
+- 📊 **Real-time Monitoring** - Live logs and GPU status display
+- 🌏 **Bilingual UI** - Full Chinese/English interface
 
 ### 📊 GPU Memory Comparison
 
@@ -176,7 +180,7 @@ PORT=7860                         # Host port
 
 ## 💡 Usage Examples
 
-### Voice Cloning
+### Basic Voice Cloning
 
 ```python
 import requests
@@ -190,6 +194,69 @@ response = requests.post(
 
 with open("output.wav", "wb") as f:
     f.write(response.content)
+```
+
+### Clone with Emotion (New Feature 🆕)
+
+```python
+# Clone voice + add emotion in one operation
+# Step 1: Select Task = "clone_with_emotion (克隆+情感)"
+# Step 2: Select Sub-task = "happy (开心)"
+# Step 3: Upload reference audio
+# Step 4: Fill in reference text and target text
+# Step 5: Click CLONE button
+# Result: New text spoken in cloned voice with happy emotion
+```
+
+### Clone with Style (New Feature 🆕)
+
+```python
+# Clone voice + apply style in one operation
+# Step 1: Select Task = "clone_with_style (克隆+风格)"
+# Step 2: Select Sub-task = "whisper (耳语)"
+# Step 3: Upload reference audio
+# Step 4: Fill in reference text and target text
+# Step 5: Click CLONE button
+# Result: New text spoken in cloned voice with whisper style
+```
+
+### Language Selection (New Feature 🆕)
+
+```
+# Method 1: Use Radio Selector
+1. Input Target Text: 今日天气好好，我哋一齐去公園行吓啦。
+2. Select Language: 粤语 [Cantonese]
+3. Click CLONE/EDIT
+4. System auto-adds: [Cantonese]今日天气好好，我哋一齐去公園行吓啦。
+
+# Method 2: Manual Tag
+Target Text: [Cantonese]今日天气好好，我哋一齐去公園行吓啦。
+
+# Supported Languages:
+- [Sichuanese] - Sichuanese dialect
+- [Cantonese] - Cantonese
+- [Japanese] - Japanese
+- [Korean] - Korean
+- (no tag) - Mandarin/English (auto-detect)
+```
+
+### Paralinguistic Tags
+
+```
+# Add non-verbal sounds for natural expression
+Target Text: 太好了[Laughter]，今天天气真不错[Surprise-ah]！
+
+# Supported Tags:
+[Breathing]           - Breathing sound
+[Laughter]            - Laughter
+[Uhm]                 - Hesitation "uhm..."
+[Sigh]                - Sighing
+[Surprise-oh]         - Surprise "oh!"
+[Surprise-ah]         - Surprise "ah!"
+[Surprise-wa]         - Surprise "wa!"
+[Confirmation-en]     - Confirmation "en"
+[Question-ei]         - Question "ei?"
+[Dissatisfaction-hnn] - Dissatisfaction "hnn"
 ```
 
 ### Emotion Editing
@@ -301,24 +368,41 @@ python test_gpu_management.py
 
 ## 📝 Changelog
 
-### 2025-12-05: GPU Memory Management & UI Improvements 🎮
+### 2025-12-05: Major Feature Updates & UI Enhancements 🎮
+
+**New Features:**
+- ✅ **Clone with Emotion/Style** - Two-step processing: clone voice + apply emotion/style
+  - `clone_with_emotion`: Clone + add emotion (14 emotions)
+  - `clone_with_style`: Clone + apply style (32 styles)
+- ✅ **Language Selector UI** - Radio buttons for easy language selection
+  - Support: Mandarin, Sichuanese, Cantonese, Japanese, Korean, English
+  - Auto-adds language tags to text (e.g., `[Cantonese]`)
+  - Overrides manual tags if both present
+- ✅ **Comprehensive Documentation** - Detailed usage guide in UI footer
+  - Quick tag reference (language tags, paralinguistic tags)
+  - 8 paralinguistic examples with use cases
+  - Multi-language examples for all supported languages
+  - Best practices and tips
 
 **GPU Memory Management:**
 - ✅ Implemented lazy loading for all models (TTS, Whisper, FunASR)
 - ✅ Added automatic GPU↔CPU offloading
 - ✅ Reduced startup memory from 40GB to 3MB (99.99%)
 - ✅ Added idle timeout monitoring (configurable)
-- ✅ Created comprehensive documentation
+- ✅ Real-time GPU status display
 
 **Bug Fixes:**
 - ✅ Fixed `edit()` method parameter mismatch
 - ✅ Fixed `NoneType` error on second edit operation
+- ✅ Fixed `actual_edit_info` variable reference error
 - ✅ Ensured models are loaded before use in all code paths
 
 **UI Enhancements:**
 - ✅ Added bilingual (English/Chinese) labels for all UI elements
-- ✅ Task and Sub-task dropdowns now show both languages
+- ✅ Task and Sub-task dropdowns show both languages
 - ✅ Example: "emotion (情感)", "happy (开心)"
+- ✅ Live execution logs with timestamps
+- ✅ FunASR cache statistics display
 - ✅ Improved user experience for Chinese users
 
 ### 2025-12-04: Unified Deployment 🚀
