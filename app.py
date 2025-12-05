@@ -390,25 +390,228 @@ class EditxTab:
                     self.clean_history_submit = gr.Button("Clear History", variant="primary")
 
             gr.Markdown("---")
-            gr.Markdown("""
-                **Button Description:**
-                - CLONE: Synthesizes audio based on uploaded audio and text, only used for clone mode, will clear history information when used.
-                - EDIT: Edits based on uploaded audio, or continues to stack edit effects based on the previous round of generated audio.
+            
+            # 功能说明区域
+            with gr.Accordion("📖 功能说明与使用指南", open=False):
+                gr.Markdown("""
+                ## 🎯 按钮说明
+                
+                - **CLONE（克隆）**: 基于上传的参考音频和文本，合成新的音频。仅用于克隆模式，使用时会清空历史记录。
+                - **EDIT（编辑）**: 基于上传的音频进行编辑，或在上一轮生成的音频基础上继续叠加编辑效果。
+                
+                ---
+                
+                ## 🔄 操作流程
+                
+                1. **上传音频**: 在左侧上传待编辑的音频文件
+                2. **填写文本**: 在 "Prompt Text" 中填写音频对应的文本内容
+                3. **选择任务**: 在右侧选择任务类型（Task）和子任务（Sub-task）
+                4. **目标文本**: 如需修改文本内容（如克隆、副语言），在 "Target Text" 中填写新文本
+                5. **点击按钮**: 点击 "CLONE" 或 "EDIT" 按钮生成音频
+                
+                ---
+                
+                ## 🎭 任务类型详解
+                
+                ### 1️⃣ **Clone (克隆)** - 零样本语音克隆
+                - **功能**: 使用 3-10 秒参考音频克隆任意音色
+                - **支持语言**: 中文、英文、四川话、粤语、日语、韩语
+                - **使用方法**:
+                  - 上传参考音频（3-10秒）
+                  - 填写参考音频的文本
+                  - 在 "Target Text" 填写想要合成的新文本
+                  - 点击 "CLONE" 按钮
+                - **语言标签**: 在文本前添加 `[Sichuanese]` / `[Cantonese]` / `[Japanese]` / `[Korean]` 使用方言或其他语言
+                - **多音字控制**: 将多音字替换为拼音，如 `我也想guo4guo4guo1儿guo4guo4的生活`
+                
+                ### 2️⃣ **Clone_with_emotion (克隆+情感)** - 克隆并添加情感 🆕
+                - **功能**: 使用参考音色说出新文本，并添加指定情感
+                - **两步处理**:
+                  1. 克隆音色并生成新文本
+                  2. 为生成的音频添加情感
+                - **支持情感**: happy (开心), angry (生气), sad (悲伤), fear (恐惧), surprised (惊讶), excited (兴奋), depressed (沮丧), humour (幽默), confusion (困惑), disgusted (厌恶), empathy (同情), embarrass (尴尬), coldness (冷漠), admiration (钦佩)
+                - **使用场景**: 想要用特定音色说新内容，并带有特定情感
+                
+                ### 3️⃣ **Clone_with_style (克隆+风格)** - 克隆并改变风格 🆕
+                - **功能**: 使用参考音色说出新文本，并应用指定说话风格
+                - **两步处理**:
+                  1. 克隆音色并生成新文本
+                  2. 为生成的音频应用风格
+                - **支持风格**: whisper (耳语), serious (严肃), child (童声), older (老年), sweet (甜美), gentle (温柔), warm (温暖), authority (权威), chat (聊天), radio (播音), story (讲故事), news (新闻), advertising (广告) 等 32 种风格
+                - **使用场景**: 想要用特定音色说新内容，并带有特定说话风格
+                
+                ### 4️⃣ **Emotion (情感)** - 情感编辑
+                - **功能**: 为现有音频添加或增强情感表达
+                - **迭代控制**: 支持多次迭代，逐步增强情感强度
+                - **支持情感**: 14 种情感 + remove (移除情感)
+                - **使用方法**:
+                  - 上传音频并填写对应文本
+                  - 选择目标情感
+                  - 调整强度（Intensity: 1-3）
+                  - 点击 "EDIT" 按钮
+                - **提示**: 可多次点击 "EDIT" 叠加效果
+                
+                ### 5️⃣ **Style (风格)** - 说话风格编辑
+                - **功能**: 改变音频的说话风格和表达方式
+                - **支持风格**: 32 种风格 + remove (移除风格)
+                - **特殊风格说明**:
+                  - **whisper (耳语)**: 建议迭代次数 ≥ 2 以获得更好效果
+                  - **child (童声)** / **older (老年)**: 改变音色年龄感
+                  - **act_coy (撒娇)**: 甜美、俏皮、亲昵的表达方式
+                  - **radio (播音)** / **news (新闻)**: 专业播音风格
+                
+                ### 6️⃣ **Paralinguistic (副语言)** - 副语言特征编辑
+                - **功能**: 添加非语言声音，使音频更自然、更具表现力
+                - **支持标签**: 
+                  - `[Breathing]` - 呼吸声
+                  - `[Laughter]` - 笑声
+                  - `[Uhm]` - 犹豫声 "嗯"
+                  - `[Sigh]` - 叹气声
+                  - `[Surprise-oh]` - 惊讶声 "哦"
+                  - `[Surprise-ah]` - 惊讶声 "啊"
+                  - `[Surprise-wa]` - 惊讶声 "哇"
+                  - `[Confirmation-en]` - 确认声 "嗯"
+                  - `[Question-ei]` - 疑问声 "诶"
+                  - `[Dissatisfaction-hnn]` - 不满声 "哼"
+                - **使用示例**:
+                  1. 上传音频，填写文本: "太好了，今天天气真不错。"
+                  2. 点击 "CLONE" 生成基础音频
+                  3. 在 "Target Text" 修改为: "太好了[Laughter]，今天天气真不错[Surprise-ah]。"
+                  4. 选择 paralinguistic 任务
+                  5. 点击 "EDIT" 生成带副语言特征的音频
+                
+                ### 7️⃣ **VAD (语音活动检测)** - 静音移除
+                - **功能**: 自动移除音频中的静音部分，保留语音内容
+                - **使用方法**: 上传音频，选择 vad 任务，点击 "EDIT"
+                - **注意**: 无需填写文本
+                
+                ### 8️⃣ **Denoise (降噪)** - 噪音移除
+                - **功能**: 移除音频中的背景噪音，保持语音清晰
+                - **使用方法**: 上传音频，选择 denoise 任务，点击 "EDIT"
+                - **注意**: 无需填写文本
+                - **效果**: 在保持语音质量的同时消除噪音
+                
+                ### 9️⃣ **Speed (语速)** - 语速调整
+                - **功能**: 调整音频的说话速度
+                - **支持选项**:
+                  - `faster (更快)` - 轻微加快
+                  - `slower (更慢)` - 轻微减慢
+                  - `more faster (非常快)` - 显著加快
+                  - `more slower (非常慢)` - 显著减慢
+                - **使用方法**: 上传音频，填写文本，选择速度选项，点击 "EDIT"
+                
+                ---
+                
+                ## 💡 高级技巧
+                
+                ### 🔄 迭代编辑
+                - 可以多次点击 "EDIT" 按钮，逐步增强效果
+                - 每次编辑都会在上一次结果的基础上叠加
+                - 历史记录会保存所有编辑步骤
+                
+                ### 🎚️ 强度控制
+                - **Intensity (强度)**: 1.0 - 3.0
+                - 1.0: 轻微效果
+                - 2.0: 中等效果（推荐）
+                - 3.0: 强烈效果
+                
+                ### 🎭 组合使用
+                - 先使用 **clone_with_emotion** 或 **clone_with_style** 生成带情感/风格的新文本音频
+                - 再使用 **paralinguistic** 添加副语言特征
+                - 最后使用 **speed** 调整语速
+                
+                ### 📏 最佳实践
+                - **音频长度**: 建议每次推理音频不超过 30 秒
+                - **参考音频**: 3-10 秒清晰音频效果最佳
+                - **文本匹配**: 确保文本与音频内容完全匹配
+                - **迭代次数**: whisper 风格建议 2+ 次迭代
+                
+                ---
+                
+                ## 🚀 性能优化
+                
+                ### GPU 内存管理
+                - **启动内存**: 3 MB（懒加载）
+                - **推理内存**: 40 GB（峰值）
+                - **空闲内存**: 5.7 GB（自动卸载）
+                - **节省**: 相比传统方式节省 85% 内存
+                
+                ### 速度优化
+                - **FunASR 缓存**: 首次推理后自动缓存，后续推理加速 3 倍
+                - **首次加载**: 20-30 秒（一次性成本）
+                - **后续推理**: 8-24 秒（含缓存）
+                
+                ---
+                
+                ## ⚠️ 注意事项
+                
+                1. **合法使用**: 请勿用于未经授权的语音克隆、身份冒充、欺诈、深度伪造或其他非法目的
+                2. **伦理规范**: 确保遵守当地法律法规和伦理准则
+                3. **责任声明**: 开发者不对技术滥用负责
+                4. **音频质量**: 参考音频质量直接影响克隆效果
+                5. **文本准确**: 文本与音频内容必须匹配，否则影响编辑效果
+                
+                ---
+                
+                ## 🔗 相关链接
+                
+                - 📄 [技术报告](https://arxiv.org/abs/2511.03601)
+                - 🎮 [在线演示](https://stepaudiollm.github.io/step-audio-editx/)
+                - 🤗 [HuggingFace 模型](https://huggingface.co/stepfun-ai/Step-Audio-EditX)
+                - 🌐 [ModelScope 模型](https://modelscope.cn/models/stepfun-ai/Step-Audio-EditX)
+                - 📊 [评测基准](https://github.com/stepfun-ai/Step-Audio-Edit-Benchmark)
                 """)
+            
+            # 项目信息区域
+            gr.Markdown("---")
             gr.Markdown("""
-                **Operation Workflow:**
-                - Upload the audio to be edited on the left side and fill in the corresponding text content of the audio;
-                - If the task requires modifying text content (such as clone, para-linguistic), fill in the text to be synthesized in the "clone text" field. For all other tasks, keep the uploaded audio text content unchanged;
-                - Select tasks and subtasks on the right side (some tasks have no subtasks, such as vad, etc.);
-                - Click the "CLONE" or "EDIT" button on the left side, and audio will be generated in the dialog box on the right side.
-                """)
-            gr.Markdown("""
-                **Para-linguistic Description:**
-                - Supported tags include: [Breathing] [Laughter] [Surprise-oh] [Confirmation-en] [Uhm] [Surprise-ah] [Surprise-wa] [Sigh] [Question-ei] [Dissatisfaction-hnn]
-                - Example:
-                    - Fill in "clone text" field: "Great, the weather is so nice today." Click the "CLONE" button to get audio.
-                    - Change "clone text" field to: "Great[Laughter], the weather is so nice today[Surprise-ah]." Click the "EDIT" button to get para-linguistic audio.
-                """)
+            ## 👥 关于本项目
+            
+            ### 原始项目
+            - **项目名称**: Step-Audio-EditX
+            - **开发团队**: Stepfun AI (阶跃星辰)
+            - **模型规模**: 3B 参数
+            - **技术架构**: LLM-based Reinforcement Learning Audio Model
+            - **开源协议**: Apache 2.0 License
+            
+            ### GPU 内存管理版本
+            - **优化作者**: [@neosun100](https://github.com/neosun100)
+            - **项目仓库**: [Step-Audio-EditX-GPU-Managed](https://github.com/neosun100/Step-Audio-EditX-GPU-Managed)
+            - **主要改进**:
+              - ✅ 实现懒加载，启动内存从 40GB 降至 3MB（99.99% 节省）
+              - ✅ 自动 GPU↔CPU 卸载，空闲内存降至 5.7GB（85% 节省）
+              - ✅ 新增 clone_with_emotion 和 clone_with_style 功能
+              - ✅ 双语 UI（中英文）
+              - ✅ 实时日志和 GPU 状态监控
+              - ✅ FunASR 持久化缓存（3倍加速）
+            
+            ### 🌟 支持本项目
+            
+            如果这个项目对你有帮助，欢迎：
+            - ⭐ 在 [GitHub](https://github.com/neosun100/Step-Audio-EditX-GPU-Managed) 上给项目点 Star
+            - 🐛 提交 [Issue](https://github.com/neosun100/Step-Audio-EditX-GPU-Managed/issues) 报告问题
+            - 💡 在 [Discussions](https://github.com/neosun100/Step-Audio-EditX-GPU-Managed/discussions) 分享想法
+            - 🔀 提交 [Pull Request](https://github.com/neosun100/Step-Audio-EditX-GPU-Managed/pulls) 贡献代码
+            - 📢 分享给更多需要的人
+            
+            ### 📞 联系方式
+            
+            - **原始项目**: [stepfun-ai/Step-Audio-EditX](https://github.com/stepfun-ai/Step-Audio-EditX)
+            - **GPU 管理版**: [neosun100/Step-Audio-EditX-GPU-Managed](https://github.com/neosun100/Step-Audio-EditX-GPU-Managed)
+            - **问题反馈**: [提交 Issue](https://github.com/neosun100/Step-Audio-EditX-GPU-Managed/issues/new)
+            
+            ### 🙏 致谢
+            
+            感谢以下开源项目的贡献：
+            - [CosyVoice](https://github.com/FunAudioLLM/CosyVoice) - TTS 模型
+            - [FunASR](https://github.com/alibaba-damo-academy/FunASR) - 音频分词
+            - [Whisper](https://github.com/openai/whisper) - 语音转文字
+            - [Transformers](https://github.com/huggingface/transformers) - 模型框架
+            
+            ---
+            
+            **Made with ❤️ by the community | 版本: GPU-Managed v1.0 | 更新时间: 2025-12-05**
+            """)
 
     def register_events(self):
         """Register event handlers"""
