@@ -15,7 +15,7 @@ from tokenizer import StepAudioTokenizer
 from tts import StepAudioTTS
 from tts_gpu_managed import GPUManagedTTS
 from model_loader import ModelSource
-from config.edit_config import get_supported_edit_types
+from config.edit_config import get_supported_edit_types, get_edit_type_key, get_edit_info_key
 from whisper_wrapper import WhisperWrapper
 from gpu_manager import get_gpu_manager
 
@@ -99,7 +99,7 @@ class EditxTab:
             self.logger.error(error_msg)
             self.add_log(f"❌ {error_msg}")
             return [{"role": "user", "content": error_msg}], state, "", self.get_live_logs()
-        if edit_type != "clone":
+        if get_edit_type_key(edit_type) != "clone":
             error_msg = "[Error] CLONE button must use clone task."
             self.logger.error(error_msg)
             self.add_log(f"❌ {error_msg}")
@@ -183,13 +183,17 @@ class EditxTab:
                 text_to_use = previous_text
                 self.logger.debug(f"Using previous audio from history, count: {len(state['history_audio'])}")
 
+            # 提取实际的编辑类型和信息键
+            actual_edit_type = get_edit_type_key(edit_type)
+            actual_edit_info = get_edit_info_key(edit_info) if edit_info else None
+            
             # For para-linguistic, use generated_text; otherwise use source text
-            if edit_type not in {"paralinguistic"}:
+            if actual_edit_type not in {"paralinguistic"}:
                 generated_text = text_to_use
 
             # Use common_tts_engine for editing
             output_audio, output_sr = common_tts_engine.edit(
-                audio_to_edit, text_to_use, edit_type, edit_info, generated_text
+                audio_to_edit, text_to_use, actual_edit_type, actual_edit_info, generated_text
             )
 
             if output_audio is not None and output_sr is not None:
@@ -308,9 +312,9 @@ class EditxTab:
                     
                 with gr.Column():
                     with gr.Row():
-                        self.edit_type = gr.Dropdown(label="Task", choices=self.edit_type_list, value="clone")
-                        self.edit_info = gr.Dropdown(label="Sub-task", choices=[], value=None)
-                    self.chat_box = gr.Chatbot(label="History", type="messages", height=480*1)
+                        self.edit_type = gr.Dropdown(label="Task (任务)", choices=self.edit_type_list, value="clone (克隆)")
+                        self.edit_info = gr.Dropdown(label="Sub-task (子任务)", choices=[], value=None)
+                    self.chat_box = gr.Chatbot(label="History (历史记录)", type="messages", height=480*1)
                     
                     # 🔥 实时日志显示区域
                     with gr.Accordion("📋 实时运行日志", open=True):
