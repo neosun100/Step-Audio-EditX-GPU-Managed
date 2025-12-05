@@ -99,7 +99,8 @@ class EditxTab:
             self.logger.error(error_msg)
             self.add_log(f"❌ {error_msg}")
             return [{"role": "user", "content": error_msg}], state, "", self.get_live_logs()
-        if get_edit_type_key(edit_type) != "clone":
+        actual_type = get_edit_type_key(edit_type)
+        if actual_type not in {"clone", "clone_with_emotion", "clone_with_style"}:
             error_msg = "[Error] CLONE button must use clone task."
             self.logger.error(error_msg)
             self.add_log(f"❌ {error_msg}")
@@ -191,10 +192,8 @@ class EditxTab:
             if actual_edit_type in {"clone_with_emotion", "clone_with_style"}:
                 # Step 1: Clone with new text
                 self.add_log(f"🔄 Step 1/2: Cloning with new text...")
-                cloned_audio, cloned_sr = common_tts_engine(
-                    tts_text=generated_text,
-                    prompt_text=text_to_use,
-                    prompt_speech_16k=audio_to_edit
+                cloned_audio, cloned_sr = common_tts_engine.clone(
+                    audio_to_edit, text_to_use, generated_text
                 )
                 
                 # Save cloned audio to temp file
