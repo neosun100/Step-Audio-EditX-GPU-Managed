@@ -324,16 +324,20 @@ class EditxTab:
                     )
                     self.generated_text = gr.Textbox(label="Target Text", lines=1, max_lines=200, max_length=1000)
                     
-                    # Language Selection Buttons
+                    # Language Selection Radio
                     with gr.Row():
-                        gr.Markdown("**🌍 语言选择** (可选，会自动添加到文本前)")
-                    with gr.Row():
-                        self.lang_none = gr.Button("普通话/英文", size="sm", variant="secondary")
-                        self.lang_sichuanese = gr.Button("四川话", size="sm", variant="secondary")
-                        self.lang_cantonese = gr.Button("粤语", size="sm", variant="secondary")
-                        self.lang_japanese = gr.Button("日语", size="sm", variant="secondary")
-                        self.lang_korean = gr.Button("韩语", size="sm", variant="secondary")
-                    self.selected_language = gr.State(value=None)  # Store selected language
+                        self.language_selector = gr.Radio(
+                            label="🌍 语言选择 (可选，会自动添加到文本前)",
+                            choices=[
+                                ("普通话/英文", None),
+                                ("四川话 [Sichuanese]", "Sichuanese"),
+                                ("粤语 [Cantonese]", "Cantonese"),
+                                ("日语 [Japanese]", "Japanese"),
+                                ("韩语 [Korean]", "Korean")
+                            ],
+                            value=None,
+                            type="value"
+                        )
                     
                     # Model Variant Selection
                     self.model_variant = gr.Radio(
@@ -780,38 +784,11 @@ class EditxTab:
         # Create independent state for each session
         state = gr.State(self.init_state())
 
-        # Language selection button events
-        self.lang_none.click(
-            fn=lambda: None,
-            inputs=[],
-            outputs=self.selected_language
-        )
-        self.lang_sichuanese.click(
-            fn=lambda: "Sichuanese",
-            inputs=[],
-            outputs=self.selected_language
-        )
-        self.lang_cantonese.click(
-            fn=lambda: "Cantonese",
-            inputs=[],
-            outputs=self.selected_language
-        )
-        self.lang_japanese.click(
-            fn=lambda: "Japanese",
-            inputs=[],
-            outputs=self.selected_language
-        )
-        self.lang_korean.click(
-            fn=lambda: "Korean",
-            inputs=[],
-            outputs=self.selected_language
-        )
-
         self.button_tts.click(self.generate_clone,
-            inputs=[self.prompt_text_input, self.prompt_audio_input, self.generated_text, self.edit_type, self.edit_info, self.model_variant, self.intensity, state, self.selected_language],
+            inputs=[self.prompt_text_input, self.prompt_audio_input, self.generated_text, self.edit_type, self.edit_info, self.model_variant, self.intensity, state, self.language_selector],
             outputs=[self.chat_box, state, self.cache_stats_display, self.live_log_display])
         self.button_edit.click(self.generate_edit,
-            inputs=[self.prompt_text_input, self.prompt_audio_input, self.generated_text, self.edit_type, self.edit_info, self.model_variant, self.intensity, state, self.selected_language],
+            inputs=[self.prompt_text_input, self.prompt_audio_input, self.generated_text, self.edit_type, self.edit_info, self.model_variant, self.intensity, state, self.language_selector],
             outputs=[self.chat_box, state])
         
         # Cache control events
