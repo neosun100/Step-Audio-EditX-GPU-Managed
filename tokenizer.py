@@ -197,6 +197,10 @@ class StepAudioTokenizer:
         return speech_tokens, vq02_ori, vq06_ori
 
     def get_vq02_code(self, audio, session_id=None, is_final=True):
+        # 确保模型已加载
+        if self.funasr_model is None:
+            self._load_models()
+        
         _tmp_wav = io.BytesIO()
         torchaudio.save(_tmp_wav, audio, 16000, format="wav")
         _tmp_wav.seek(0)
@@ -234,6 +238,9 @@ class StepAudioTokenizer:
             return c_list
 
     def get_vq06_code(self, audio):
+        # 确保模型已加载
+        if self.ort_session is None:
+            self._load_models()
 
         def split_audio(audio, chunk_duration=480000):
             start = 0
