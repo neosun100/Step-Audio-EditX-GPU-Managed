@@ -1,0 +1,973 @@
+# Step-Audio-EditX
+<p align="center">
+  <img src="assets/logo.png"  height=100>
+</p>
+
+<div align="center">
+    <a href="https://stepaudiollm.github.io/step-audio-editx/"><img src="https://img.shields.io/static/v1?label=Demo%20Page&message=Web&color=green"></a> &ensp;
+  <a href="https://arxiv.org/abs/2511.03601"><img src="https://img.shields.io/static/v1?label=Tech%20Report&message=Arxiv&color=red"></a> &ensp;
+  <a href="https://huggingface.co/stepfun-ai/Step-Audio-EditX"><img src="https://img.shields.io/static/v1?label=Step-Audio-EditX&message=HuggingFace&color=yellow"></a> &ensp;
+    <a href="https://modelscope.cn/models/stepfun-ai/Step-Audio-EditX"><img src="https://img.shields.io/static/v1?label=Step-Audio-EditX&message=ModelScope&color=blue"></a> &ensp;
+  <a href="https://huggingface.co/spaces/stepfun-ai/Step-Audio-EditX"><img src="https://img.shields.io/static/v1?label=Space%20Playground&message=HuggingFace&color=yellow"></a> &ensp;
+</div>
+
+## 🔥🔥🔥 News!!
+* Nov 19, 2025: ⚙️ We release a **new version** of our model, which **supports polyphonic pronunciation control** and improves the performance of emotion, speaking style, and paralinguistic editing.
+* Nov 12, 2025: 📦 We release the **optimized inference code** and **model weights** of **Step-Audio-EditX** ([HuggingFace](https://huggingface.co/stepfun-ai/Step-Audio-EditX);  [ModelScope](https://modelscope.cn/models/stepfun-ai/Step-Audio-EditX)) and **Step-Audio-Tokenizer**([HuggingFace](https://huggingface.co/stepfun-ai/Step-Audio-Tokenizer);  [ModelScope](https://modelscope.cn/models/stepfun-ai/Step-Audio-Tokenizer))
+* Nov 07, 2025: ✨ [Demo Page](https://stepaudiollm.github.io/step-audio-editx/) ; 🎮  [HF Space Playground](https://huggingface.co/spaces/stepfun-ai/Step-Audio-EditX)
+* Nov 06, 2025: 👋 We release the technical report of [Step-Audio-EditX](https://arxiv.org/abs/2511.03601).
+
+## Introduction
+We are open-sourcing Step-Audio-EditX, a powerful **3B-parameter** LLM-based **Reinforcement Learning** audio model specialized in expressive and iterative audio editing. It excels at editing emotion, speaking style, and paralinguistics, and also features robust zero-shot text-to-speech (TTS) capabilities. 
+
+## 📑 Open-source Plan
+- [x] Inference Code
+- [x] Online demo (Gradio)
+- [ ] Step-Audio-Edit-Benchmark
+- [x] Model Checkpoints
+  - [x] Step-Audio-Tokenizer
+  - [x] Step-Audio-EditX
+  - [ ] Step-Audio-EditX-Int4
+- [ ] Training Code
+  - [ ] SFT training
+  - [ ] PPO training
+- [ ] ⏳ Feature Support Plan
+  - [ ] Editing
+    - [x] Polyphone pronunciation control
+    - [ ] More paralinguistic tags ([Cough, Crying, Stress, etc.])
+    - [ ] Filler word removal
+  - [ ] Other Languages
+    - [ ] Japanese, Korean, Arabic, French, Russian, Spanish, etc.
+  
+## Features
+- **Zero-Shot TTS**
+  - Excellent zero-shot TTS cloning for Mandarin, English, Sichuanese, and Cantonese.
+  - To use a dialect, just add a **[Sichuanese]** or **[Cantonese]** tag before your text.
+  - 🔥 Polyphone pronunciation control, all you need to do is replace the polyphonic characters with pinyin.
+    - **[我也想过过过儿过过的生活]** -> **[我也想guo4guo4guo1儿guo4guo4的生活]**
+ 
+    
+- **Emotion and Speaking Style Editing**
+  - Remarkably effective iterative control over emotions and styles, supporting **dozens** of options for editing.
+    - Emotion Editing : [ *Angry*, *Happy*, *Sad*, *Excited*, *Fearful*, *Surprised*, *Disgusted*, etc. ]
+    - Speaking Style Editing: [ *Act_coy*, *Older*, *Child*, *Whisper*, *Serious*, *Generous*, *Exaggerated*, etc.]
+    - Editing with more emotion and more speaking styles is on the way. **Get Ready!** 🚀
+    
+
+- **Paralinguistic Editing**
+  -  Precise control over 10 types of paralinguistic features for more natural, human-like, and expressive synthetic audio.
+  - Supporting Tags:
+    - [ *Breathing*, *Laughter*, *Suprise-oh*, *Confirmation-en*, *Uhm*, *Suprise-ah*, *Suprise-wa*, *Sigh*, *Question-ei*, *Dissatisfaction-hnn* ]
+
+---
+
+## 🚀 快速开始（新项目部署指南）
+
+### 📋 前置要求
+
+#### 硬件要求
+- **GPU**: NVIDIA GPU with CUDA support
+  - **推荐显存**: 16GB+ (最低 12GB)
+  - **测试环境**: L40S GPU
+- **操作系统**: Linux (推荐 Ubuntu 22.04+)
+- **Docker**: 已安装 Docker 和 nvidia-docker2
+
+#### 软件要求
+- Docker >= 20.10
+- nvidia-docker2
+- NVIDIA Container Toolkit
+- Git LFS (用于下载大模型文件)
+
+### 📦 第一步：克隆项目
+
+```bash
+# 克隆代码仓库
+git clone https://github.com/stepfun-ai/Step-Audio-EditX.git
+cd Step-Audio-EditX
+
+# 安装 Git LFS（用于下载大模型）
+git lfs install
+```
+
+### 📥 第二步：下载模型
+
+#### 方式 1：从 HuggingFace 下载（推荐）
+
+```bash
+# 创建模型目录
+mkdir -p models
+cd models
+
+# 下载 Step-Audio-Tokenizer
+git clone https://huggingface.co/stepfun-ai/Step-Audio-Tokenizer
+
+# 下载 Step-Audio-EditX
+git clone https://huggingface.co/stepfun-ai/Step-Audio-EditX
+
+cd ..
+```
+
+#### 方式 2：从 ModelScope 下载（国内用户）
+
+```bash
+# 创建模型目录
+mkdir -p models
+cd models
+
+# 下载 Step-Audio-Tokenizer
+git clone https://www.modelscope.cn/stepfun-ai/Step-Audio-Tokenizer.git Step-Audio-Tokenizer
+
+# 下载 Step-Audio-EditX
+git clone https://www.modelscope.cn/stepfun-ai/Step-Audio-EditX.git Step-Audio-EditX
+
+cd ..
+```
+
+#### 验证模型结构
+
+下载完成后，确保目录结构如下：
+
+```
+Step-Audio-EditX/
+├── models/
+│   ├── Step-Audio-Tokenizer/      # Tokenizer 模型
+│   │   └── dengcunqin/...         # FunASR 模型会自动下载到这里
+│   └── Step-Audio-EditX/          # TTS 模型
+│       └── ...                     # 模型文件
+├── app.py                          # UI 启动脚本
+├── api_server.py                   # API 启动脚本
+├── Dockerfile                      # Docker 构建文件
+└── ...
+```
+
+### 🐳 第三步：构建 Docker 镜像
+
+```bash
+# 在项目根目录执行
+docker build -t step-audio-editx:latest .
+```
+
+**构建时间**: 约 10-20 分钟（取决于网络速度）
+
+**构建完成后验证**:
+```bash
+docker images | grep step-audio-editx
+# 应该看到: step-audio-editx   latest   ...   ...   ...
+```
+
+### 🎯 第四步：选择启动方式
+
+项目支持两种启动方式：
+
+1. **UI 方式** - Gradio Web 界面（适合交互式使用）
+2. **API 方式** - OpenAI 兼容 API（适合集成到其他系统）
+
+---
+
+## 🖥️ 方式一：UI 方式启动（Gradio Web 界面）
+
+### 快速启动
+
+#### 使用启动脚本（推荐）
+
+```bash
+# 创建启动脚本
+cat > start_ui_container.sh << 'EOF'
+#!/bin/bash
+# Step-Audio-EditX UI 容器启动脚本
+
+set -e
+
+PROJECT_DIR="/home/neo/upload/Step-Audio-EditX"  # ⚠️ 修改为您的项目路径
+GPU_ID=2                                          # ⚠️ 修改为您要使用的 GPU ID
+UI_PORT=7860                                       # ⚠️ 修改为您要使用的端口
+
+echo "🚀 启动 Step-Audio-EditX UI 容器..."
+
+# 检查并清理旧容器
+if [ "$(docker ps -aq -f name=step-audio-ui-opt)" ]; then
+    echo "⚠️  删除旧容器..."
+    docker stop step-audio-ui-opt 2>/dev/null || true
+    docker rm step-audio-ui-opt 2>/dev/null || true
+fi
+
+# 启动容器
+docker run -d \
+  --name step-audio-ui-opt \
+  --restart=always \
+  --gpus '"device='${GPU_ID}'"' \
+  -p ${UI_PORT}:7860 \
+  -v ${PROJECT_DIR}:/app \
+  -v ${PROJECT_DIR}/models:/app/models:ro \
+  -v ${PROJECT_DIR}/cache:/app/cache \
+  -e CUDA_VISIBLE_DEVICES=0 \
+  -e PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True \
+  step-audio-editx:latest \
+  python app.py \
+    --model-path /app/models/Step-Audio-EditX \
+    --tokenizer-model-id /app/models/Step-Audio-Tokenizer \
+    --model-source local \
+    --enable-auto-transcribe \
+    --server-name 0.0.0.0 \
+    --server-port 7860
+
+if [ $? -eq 0 ]; then
+    echo "✅ UI 容器启动成功！"
+    echo ""
+    echo "📋 查看日志: docker logs -f step-audio-ui-opt"
+    echo "🌐 访问地址: http://localhost:${UI_PORT}"
+    echo ""
+    echo "⏳ 等待服务启动（约 3 分钟）..."
+else
+    echo "❌ 容器启动失败！"
+    exit 1
+fi
+EOF
+
+chmod +x start_ui_container.sh
+
+# 修改脚本中的路径和 GPU ID
+# 编辑 start_ui_container.sh，修改：
+#   PROJECT_DIR="/your/project/path"
+#   GPU_ID=0  # 改为您要使用的 GPU ID
+
+# 执行启动
+./start_ui_container.sh
+```
+
+#### 手动启动
+
+```bash
+# ⚠️ 请根据实际情况修改以下变量
+PROJECT_DIR="/home/neo/upload/Step-Audio-EditX"  # 项目路径
+GPU_ID=2                                          # GPU ID (0, 1, 2, 3...)
+UI_PORT=7860                                      # 宿主机端口
+
+docker run -d \
+  --name step-audio-ui-opt \
+  --restart=always \
+  --gpus '"device='${GPU_ID}'"' \
+  -p ${UI_PORT}:7860 \
+  -v ${PROJECT_DIR}:/app \
+  -v ${PROJECT_DIR}/models:/app/models:ro \
+  -v ${PROJECT_DIR}/cache:/app/cache \
+  -e CUDA_VISIBLE_DEVICES=0 \
+  -e PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True \
+  step-audio-editx:latest \
+  python app.py \
+    --model-path /app/models/Step-Audio-EditX \
+    --tokenizer-model-id /app/models/Step-Audio-Tokenizer \
+    --model-source local \
+    --enable-auto-transcribe \
+    --server-name 0.0.0.0 \
+    --server-port 7860
+```
+
+### 📊 UI 容器配置说明
+
+| 参数 | 说明 | 默认值 | 可修改 |
+|-----|------|--------|--------|
+| `--name` | 容器名称 | `step-audio-ui-opt` | ✅ |
+| `--restart` | 重启策略 | `always` | ✅ |
+| `--gpus` | GPU 设备 | `device=2` | ✅ **必须修改** |
+| `-p` | 端口映射 | `7860:7860` | ✅ **可修改宿主机端口** |
+| `-v /app` | 代码目录 | 项目根目录 | ✅ **必须修改** |
+| `-v /app/models` | 模型目录 | `models/` | ✅ **必须修改** |
+| `-v /app/cache` | 缓存目录 | `cache/` | ✅ **必须修改** |
+| `--model-path` | TTS 模型路径 | `/app/models/Step-Audio-EditX` | ❌ |
+| `--tokenizer-model-id` | Tokenizer 路径 | `/app/models/Step-Audio-Tokenizer` | ❌ |
+| `--server-port` | 容器内端口 | `7860` | ❌ |
+
+### ✅ 验证 UI 启动
+
+```bash
+# 1. 检查容器状态
+docker ps | grep step-audio-ui-opt
+# 应该看到: step-audio-ui-opt   Up X minutes   0.0.0.0:7860->7860/tcp
+
+# 2. 查看启动日志（等待 3 分钟）
+docker logs -f step-audio-ui-opt
+# 看到 "Running on local URL: http://0.0.0.0:7860" 表示启动成功
+
+# 3. 访问 Web 界面
+# 浏览器打开: http://localhost:7860
+```
+
+### 🎨 UI 功能特性
+
+- ✅ **零样本语音克隆** - 上传参考音频，克隆声音
+- ✅ **情感编辑** - 支持 happy, sad, angry, fear 等多种情感
+- ✅ **风格编辑** - 支持 whisper, serious, child 等多种风格
+- ✅ **副语言编辑** - 添加呼吸、笑声、叹息等自然音效
+- ✅ **语速控制** - faster/slower 语速调整
+- ✅ **降噪处理** - 自动去除背景噪音
+- ✅ **VAD 处理** - 语音活动检测和分段
+- ✅ **实时缓存统计** - 查看 FunASR 缓存命中率
+- ✅ **实时运行日志** - 查看详细执行步骤
+
+---
+
+## 🔌 方式二：API 方式启动（OpenAI 兼容 API）
+
+### 快速启动
+
+#### 使用启动脚本（推荐）
+
+```bash
+# 使用项目自带的启动脚本
+cd /home/neo/upload/Step-Audio-EditX
+
+# 编辑启动脚本，修改路径和 GPU ID
+vim start_api_container.sh
+# 修改以下变量：
+#   -v /home/neo/upload/Step-Audio-EditX:/app  # 改为您的项目路径
+#   --gpus '"device=3"'                        # 改为您要使用的 GPU ID
+
+# 执行启动
+./start_api_container.sh
+```
+
+#### 手动启动
+
+```bash
+# ⚠️ 请根据实际情况修改以下变量
+PROJECT_DIR="/home/neo/upload/Step-Audio-EditX"  # 项目路径
+GPU_ID=3                                          # GPU ID (0, 1, 2, 3...)
+API_PORT=8003                                     # 宿主机端口
+
+docker run -d \
+  --name step-audio-api-opt \
+  --restart=always \
+  --gpus '"device='${GPU_ID}'"' \
+  -p ${API_PORT}:8000 \
+  -v ${PROJECT_DIR}:/app \
+  -v ${PROJECT_DIR}/models:/app/models:ro \
+  -v ${PROJECT_DIR}/cache:/app/cache \
+  -e CUDA_VISIBLE_DEVICES=0 \
+  -e PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True \
+  -e OMP_NUM_THREADS=8 \
+  -e MKL_NUM_THREADS=8 \
+  step-audio-editx:latest \
+  python api_server.py \
+    --model-path /app/models \
+    --model-source local \
+    --enable-auto-transcribe \
+    --api-host 0.0.0.0 \
+    --api-port 8000
+```
+
+### 📊 API 容器配置说明
+
+| 参数 | 说明 | 默认值 | 可修改 |
+|-----|------|--------|--------|
+| `--name` | 容器名称 | `step-audio-api-opt` | ✅ |
+| `--restart` | 重启策略 | `always` | ✅ |
+| `--gpus` | GPU 设备 | `device=3` | ✅ **必须修改** |
+| `-p` | 端口映射 | `8003:8000` | ✅ **可修改宿主机端口** |
+| `-v /app` | 代码目录 | 项目根目录 | ✅ **必须修改** |
+| `-v /app/models` | 模型目录 | `models/` | ❌ |
+| `-v /app/cache` | 缓存目录 | `cache/` | ❌ |
+| `--model-path` | **模型根目录** | `/app/models` | ❌ **注意：与 UI 不同！** |
+| `--api-port` | 容器内端口 | `8000` | ❌ |
+
+### ⚠️ 重要：API 与 UI 的路径差异
+
+**关键区别**：
+- **UI 容器**: `--model-path /app/models/Step-Audio-EditX`
+- **API 容器**: `--model-path /app/models` （**少一层目录！**）
+
+这是因为 `api_server.py` 会自动拼接子目录：
+```python
+tokenizer_path = base_dir / "Step-Audio-Tokenizer"  # /app/models/Step-Audio-Tokenizer
+tts_path = base_dir / "Step-Audio-EditX"            # /app/models/Step-Audio-EditX
+```
+
+### ✅ 验证 API 启动
+
+```bash
+# 1. 检查容器状态
+docker ps | grep step-audio-api-opt
+# 应该看到: step-audio-api-opt   Up X minutes   0.0.0.0:8003->8000/tcp
+
+# 2. 查看启动日志（等待 3 分钟）
+docker logs -f step-audio-api-opt
+# 看到 "Uvicorn running on http://0.0.0.0:8000" 表示启动成功
+
+# 3. 测试健康检查
+curl http://localhost:8003/healthz
+# 应该返回: {"status":"ok"}
+
+# 4. 查看 API 文档
+# 浏览器打开: http://localhost:8003/docs
+```
+
+### 🔌 API 端点说明
+
+#### 基础端点
+
+| 端点 | 方法 | 说明 |
+|-----|------|------|
+| `/healthz` | GET | 健康检查 |
+| `/v1/models` | GET | 获取模型列表 |
+| `/v1/voices` | GET | 获取预设声音列表 |
+| `/v1/tags` | GET | 获取支持的标签列表 |
+| `/v1/audio/speech` | POST | **核心端点：生成音频** |
+| `/docs` | GET | Swagger UI 文档 |
+| `/redoc` | GET | ReDoc 文档 |
+
+#### 核心端点：`/v1/audio/speech`
+
+**请求示例**：
+
+```bash
+curl -X POST http://localhost:8003/v1/audio/speech \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "step-audio-editx",
+    "voice": "happy_en",
+    "input": "Hello! This is a test.",
+    "response_format": "wav",
+    "step_audio": {
+      "mode": "clone",
+      "model_variant": "base",
+      "intensity": 1.0
+    }
+  }' \
+  --output output.wav
+```
+
+**请求参数说明**：
+
+| 参数 | 类型 | 必填 | 说明 |
+|-----|------|------|------|
+| `model` | string | ✅ | 固定值: `"step-audio-editx"` |
+| `voice` | string | ❌ | 预设声音 ID（如 `"happy_en"`, `"fear_female"`） |
+| `input` | string | ✅ | 要生成的文本 |
+| `response_format` | string | ❌ | 音频格式: `wav` (默认), `mp3`, `flac` |
+| `step_audio.mode` | string | ✅ | 模式: `clone`, `emotion`, `style`, `paralinguistic`, `speed`, `denoise`, `vad` |
+| `step_audio.model_variant` | string | ❌ | 模型变体: `base` (默认), `awq`, `bnb` |
+| `step_audio.intensity` | float | ❌ | 强度: `0.1` - `3.0` (默认: `1.0`) |
+| `step_audio.edit_info` | string | ❌ | 编辑信息（根据 mode 而定） |
+| `step_audio.prompt_text` | string | ❌ | 参考音频文本 |
+| `step_audio.prompt_audio_url` | string | ❌ | 参考音频 URL |
+| `step_audio.prompt_audio_base64` | string | ❌ | 参考音频 Base64 |
+| `step_audio.input_audio_url` | string | ❌ | 输入音频 URL（edit 模式） |
+| `step_audio.audio_text` | string | ❌ | 原音频文本（edit 模式） |
+
+**响应**：
+- 成功：返回音频文件（二进制流）
+- 失败：返回 JSON 错误信息
+
+---
+
+## ⚙️ 高级配置
+
+### 🔧 环境变量说明
+
+#### UI 容器环境变量
+
+| 变量名 | 说明 | 默认值 | 推荐值 |
+|-------|------|--------|--------|
+| `CUDA_VISIBLE_DEVICES` | 容器内可见的 GPU | `0` | `0` |
+| `PYTORCH_CUDA_ALLOC_CONF` | PyTorch 内存分配 | `expandable_segments:True` | ✅ 推荐 |
+
+#### API 容器环境变量
+
+| 变量名 | 说明 | 默认值 | 推荐值 |
+|-------|------|--------|--------|
+| `CUDA_VISIBLE_DEVICES` | 容器内可见的 GPU | `0` | `0` |
+| `PYTORCH_CUDA_ALLOC_CONF` | PyTorch 内存分配 | `expandable_segments:True` | ✅ 推荐 |
+| `OMP_NUM_THREADS` | OpenMP 线程数 | `8` | 根据 CPU 核心数调整 |
+| `MKL_NUM_THREADS` | MKL 线程数 | `8` | 根据 CPU 核心数调整 |
+
+### 🚀 性能优化
+
+#### 已启用的优化
+
+1. **TF32 加速** ✅
+   - 自动启用（在代码中已配置）
+   - 提升约 1.2x 性能
+
+2. **FunASR 缓存** ✅
+   - 自动缓存音频编码结果
+   - 缓存命中可提速 40%
+   - 缓存目录：`/app/cache`（持久化）
+
+3. **ONNX 优化** ✅
+   - CUDA Graph 自动初始化
+   - 减少推理延迟
+
+4. **Model Variant 选择**
+   - `base`: 标准模型（12GB+ 显存）
+   - `awq`: AWQ 4-bit 量化（8GB+ 显存）
+   - `bnb`: BitsAndBytes 4-bit（8GB+ 显存）
+
+#### 显存优化建议
+
+如果显存不足 12GB，可以：
+
+1. **使用量化模型**：
+   ```bash
+   # 在 API 请求中使用
+   "step_audio": {
+     "model_variant": "awq"  # 或 "bnb"
+   }
+   ```
+
+2. **降低 batch size**：
+   - 当前默认 batch size = 1
+   - 如需调整，修改代码中的相关参数
+
+### 🔄 容器管理
+
+#### 查看容器状态
+
+```bash
+# 查看所有 Step-Audio 容器
+docker ps | grep step-audio
+
+# 查看容器详细信息
+docker inspect step-audio-ui-opt
+docker inspect step-audio-api-opt
+```
+
+#### 查看日志
+
+```bash
+# 实时查看日志
+docker logs -f step-audio-ui-opt
+docker logs -f step-audio-api-opt
+
+# 查看最近 100 行日志
+docker logs --tail 100 step-audio-ui-opt
+
+# 查看缓存相关日志
+docker logs step-audio-api-opt 2>&1 | grep -E "Cache (HIT|MISS)"
+```
+
+#### 重启容器
+
+```bash
+# 重启 UI 容器
+docker restart step-audio-ui-opt
+
+# 重启 API 容器
+docker restart step-audio-api-opt
+```
+
+#### 停止容器
+
+```bash
+# 停止 UI 容器
+docker stop step-audio-ui-opt
+
+# 停止 API 容器
+docker stop step-audio-api-opt
+
+# 停止并删除容器
+docker stop step-audio-ui-opt && docker rm step-audio-ui-opt
+docker stop step-audio-api-opt && docker rm step-audio-api-opt
+```
+
+#### 更新代码
+
+```bash
+# 由于代码目录是挂载的，修改代码后：
+# 1. UI 容器：需要重启容器
+docker restart step-audio-ui-opt
+
+# 2. API 容器：需要重启容器
+docker restart step-audio-api-opt
+```
+
+---
+
+## 🐛 故障排查
+
+### 常见问题
+
+#### 1. 容器启动失败：`FileNotFoundError: Tokenizer directory missing`
+
+**原因**：模型路径配置错误
+
+**解决方案**：
+- **UI 容器**：确保 `--model-path /app/models/Step-Audio-EditX` 和 `--tokenizer-model-id /app/models/Step-Audio-Tokenizer`
+- **API 容器**：确保 `--model-path /app/models`（**注意：少一层目录！**）
+
+**验证**：
+```bash
+# 检查模型目录是否存在
+docker exec step-audio-ui-opt ls -la /app/models/
+# 应该看到: Step-Audio-EditX 和 Step-Audio-Tokenizer
+
+docker exec step-audio-api-opt ls -la /app/models/
+# 应该看到: Step-Audio-EditX 和 Step-Audio-Tokenizer
+```
+
+#### 2. 容器不断重启：`Restarting (1) X seconds ago`
+
+**原因**：启动命令或路径错误
+
+**解决方案**：
+```bash
+# 查看错误日志
+docker logs step-audio-api-opt
+
+# 常见错误：
+# - 模型路径错误 → 检查 --model-path 参数
+# - GPU 不可用 → 检查 --gpus 参数
+# - 端口被占用 → 检查 -p 参数
+```
+
+#### 3. GPU 不可用：`CUDA error: no kernel image is available`
+
+**原因**：Docker 镜像的 CUDA 版本与 GPU 不兼容
+
+**解决方案**：
+- 检查 GPU 驱动版本：`nvidia-smi`
+- 检查 CUDA 版本：`nvcc --version`
+- 确保使用兼容的 Docker 镜像（当前使用 `nvidia/cuda:12.1.0`）
+
+#### 4. 显存不足：`CUDA out of memory`
+
+**原因**：GPU 显存不足 12GB
+
+**解决方案**：
+1. 使用量化模型（`model_variant: "awq"` 或 `"bnb"`）
+2. 关闭其他占用显存的程序
+3. 使用显存更大的 GPU
+
+#### 5. 端口被占用：`bind: address already in use`
+
+**原因**：端口已被其他程序占用
+
+**解决方案**：
+```bash
+# 检查端口占用
+sudo lsof -i :7860  # UI 端口
+sudo lsof -i :8003  # API 端口
+
+# 方案 1：修改启动脚本中的端口
+# 方案 2：停止占用端口的程序
+```
+
+#### 6. 缓存不工作：缓存命中率始终为 0
+
+**原因**：缓存目录权限问题或路径错误
+
+**解决方案**：
+```bash
+# 检查缓存目录
+docker exec step-audio-ui-opt ls -la /app/cache
+docker exec step-audio-api-opt ls -la /app/cache
+
+# 检查权限
+docker exec step-audio-ui-opt ls -ld /app/cache
+# 应该可写
+
+# 查看缓存日志
+docker logs step-audio-ui-opt 2>&1 | grep -E "Cache (HIT|MISS)"
+```
+
+#### 7. API 请求超时
+
+**原因**：模型加载未完成或请求处理时间过长
+
+**解决方案**：
+```bash
+# 1. 等待模型完全加载（首次启动需要 3-5 分钟）
+docker logs step-audio-api-opt | grep "Application startup complete"
+
+# 2. 检查 GPU 使用情况
+nvidia-smi
+
+# 3. 查看 API 日志
+docker logs -f step-audio-api-opt
+```
+
+### 🔍 调试技巧
+
+#### 进入容器调试
+
+```bash
+# 进入 UI 容器
+docker exec -it step-audio-ui-opt bash
+
+# 进入 API 容器
+docker exec -it step-audio-api-opt bash
+
+# 在容器内检查
+python --version
+nvidia-smi
+ls -la /app/models/
+ls -la /app/cache/
+```
+
+#### 查看 GPU 使用情况
+
+```bash
+# 实时监控
+watch -n 1 nvidia-smi
+
+# 查看特定 GPU
+nvidia-smi -i 2  # GPU 2 (UI)
+nvidia-smi -i 3  # GPU 3 (API)
+```
+
+#### 测试 API 端点
+
+```bash
+# 健康检查
+curl http://localhost:8003/healthz
+
+# 模型列表
+curl http://localhost:8003/v1/models
+
+# 声音预设
+curl http://localhost:8003/v1/voices
+
+# 生成音频（简单测试）
+curl -X POST http://localhost:8003/v1/audio/speech \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "step-audio-editx",
+    "voice": "happy_en",
+    "input": "Test",
+    "step_audio": {"mode": "clone", "model_variant": "base", "intensity": 1.0}
+  }' \
+  --output test.wav
+```
+
+---
+
+## 📚 完整使用示例
+
+### UI 方式使用示例
+
+1. **启动 UI 容器**（见上方"方式一"）
+2. **访问 Web 界面**：http://localhost:7860
+3. **使用功能**：
+   - 上传参考音频 → 选择模式 → 输入文本 → 生成
+
+### API 方式使用示例
+
+#### Python 客户端示例
+
+```python
+import requests
+import json
+
+API_BASE = "http://localhost:8003"
+
+# 1. 健康检查
+response = requests.get(f"{API_BASE}/healthz")
+print(response.json())  # {"status": "ok"}
+
+# 2. 获取模型列表
+response = requests.get(f"{API_BASE}/v1/models")
+print(response.json())
+
+# 3. 生成音频（Clone 模式）
+data = {
+    "model": "step-audio-editx",
+    "voice": "happy_en",
+    "input": "Hello! This is a test.",
+    "response_format": "wav",
+    "step_audio": {
+        "mode": "clone",
+        "model_variant": "base",
+        "intensity": 1.0
+    }
+}
+response = requests.post(
+    f"{API_BASE}/v1/audio/speech",
+    json=data,
+    stream=True
+)
+with open("output.wav", "wb") as f:
+    for chunk in response.iter_content(chunk_size=8192):
+        f.write(chunk)
+print("音频已保存到 output.wav")
+
+# 4. 生成音频（Emotion 编辑）
+data = {
+    "model": "step-audio-editx",
+    "voice": "fear_female",
+    "input": "我真的很害怕",
+    "step_audio": {
+        "mode": "emotion",
+        "edit_info": "fear",
+        "model_variant": "base",
+        "intensity": 2.0
+    }
+}
+response = requests.post(
+    f"{API_BASE}/v1/audio/speech",
+    json=data,
+    stream=True
+)
+with open("emotion_fear.wav", "wb") as f:
+    for chunk in response.iter_content(chunk_size=8192):
+        f.write(chunk)
+```
+
+#### cURL 示例
+
+```bash
+# Clone 模式
+curl -X POST http://localhost:8003/v1/audio/speech \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "step-audio-editx",
+    "voice": "happy_en",
+    "input": "Hello! This is a test.",
+    "step_audio": {
+      "mode": "clone",
+      "model_variant": "base",
+      "intensity": 1.0
+    }
+  }' \
+  --output clone.wav
+
+# Emotion 编辑
+curl -X POST http://localhost:8003/v1/audio/speech \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "step-audio-editx",
+    "voice": "fear_female",
+    "input": "我真的很害怕",
+    "step_audio": {
+      "mode": "emotion",
+      "edit_info": "fear",
+      "model_variant": "base",
+      "intensity": 2.0
+    }
+  }' \
+  --output emotion_fear.wav
+
+# Style 编辑
+curl -X POST http://localhost:8003/v1/audio/speech \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "step-audio-editx",
+    "voice": "whisper_cn",
+    "input": "这是测试文本",
+    "step_audio": {
+      "mode": "style",
+      "edit_info": "whisper",
+      "model_variant": "base",
+      "intensity": 1.5
+    }
+  }' \
+  --output style_whisper.wav
+```
+
+---
+
+## 📖 更多信息
+
+### 支持的标签
+
+详见原 README 的 "Available Tags" 部分，包括：
+- **Emotion**: happy, sad, angry, fear, surprised, excited, etc.
+- **Speaking Style**: whisper, serious, child, older, act_coy, etc.
+- **Paralinguistic**: Breathing, Laughter, Uhm, Sigh, etc.
+
+### 模型下载地址
+
+| Models | 🤗 Hugging Face | ModelScope |
+|-------|-------|-------|
+| Step-Audio-EditX | [stepfun-ai/Step-Audio-EditX](https://huggingface.co/stepfun-ai/Step-Audio-EditX) | [stepfun-ai/Step-Audio-EditX](https://modelscope.cn/models/stepfun-ai/Step-Audio-EditX) |
+| Step-Audio-Tokenizer | [stepfun-ai/Step-Audio-Tokenizer](https://huggingface.co/stepfun-ai/Step-Audio-Tokenizer) | [stepfun-ai/Step-Audio-Tokenizer](https://modelscope.cn/models/stepfun-ai/Step-Audio-Tokenizer) |
+
+### 技术报告
+
+- [ArXiv 技术报告](https://arxiv.org/abs/2511.03601)
+- [Demo 页面](https://stepaudiollm.github.io/step-audio-editx/)
+- [HuggingFace Space](https://huggingface.co/spaces/stepfun-ai/Step-Audio-EditX)
+
+---
+
+## ✅ 快速检查清单
+
+### 新项目部署检查清单
+
+- [ ] ✅ 已安装 Docker 和 nvidia-docker2
+- [ ] ✅ 已克隆代码仓库
+- [ ] ✅ 已安装 Git LFS
+- [ ] ✅ 已下载 Step-Audio-Tokenizer 模型
+- [ ] ✅ 已下载 Step-Audio-EditX 模型
+- [ ] ✅ 已构建 Docker 镜像
+- [ ] ✅ 已修改启动脚本中的路径和 GPU ID
+- [ ] ✅ 已启动容器（UI 或 API）
+- [ ] ✅ 已验证容器正常运行
+- [ ] ✅ 已测试功能（Web 界面或 API）
+
+### 启动后验证清单
+
+- [ ] ✅ 容器状态：`Up X minutes`（非 `Restarting`）
+- [ ] ✅ 端口映射正确
+- [ ] ✅ GPU 使用正常（`nvidia-smi`）
+- [ ] ✅ 日志无错误信息
+- [ ] ✅ Web 界面可访问（UI 方式）
+- [ ] ✅ API 健康检查通过（API 方式）
+- [ ] ✅ 缓存目录可写
+- [ ] ✅ 生成音频功能正常
+
+---
+
+## 🎯 总结
+
+### 两种启动方式对比
+
+| 特性 | UI 方式 | API 方式 |
+|-----|--------|---------|
+| **适用场景** | 交互式使用、测试 | 集成到其他系统 |
+| **访问方式** | Web 浏览器 | HTTP API |
+| **启动命令** | `app.py` | `api_server.py` |
+| **端口** | 7860 | 8003 (可自定义) |
+| **模型路径** | `/app/models/Step-Audio-EditX` | `/app/models` |
+| **功能** | 完整 UI 界面 | OpenAI 兼容 API |
+| **性能优化** | ✅ 全部启用 | ✅ 全部启用 |
+
+### 关键配置差异
+
+**UI 容器**：
+```bash
+--model-path /app/models/Step-Audio-EditX
+--tokenizer-model-id /app/models/Step-Audio-Tokenizer
+```
+
+**API 容器**：
+```bash
+--model-path /app/models  # ⚠️ 注意：少一层目录！
+```
+
+---
+
+## 📞 获取帮助
+
+- **GitHub Issues**: [提交问题](https://github.com/stepfun-ai/Step-Audio-EditX/issues)
+- **Discussions**: [功能讨论](https://github.com/stepfun-ai/Step-Audio-EditX/discussions)
+
+---
+
+## 📄 License
+
+The code in this open-source repository is licensed under the [Apache 2.0](LICENSE) License.
+
+---
+
+## ⚠️ Usage Disclaimer
+
+- Do not use this model for any unauthorized activities, including but not limited to:
+  - Voice cloning without permission
+  - Identity impersonation
+  - Fraud
+  - Deepfakes or any other illegal purposes
+- Ensure compliance with local laws and regulations, and adhere to ethical guidelines when using this model.
+- The model developers are not responsible for any misuse or abuse of this technology.
+
+---
+
+**🎉 祝您使用愉快！如有问题，请查看故障排查部分或提交 Issue。**

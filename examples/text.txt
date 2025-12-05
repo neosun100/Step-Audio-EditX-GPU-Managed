@@ -1,0 +1,8 @@
+zero_shot_en_prompt.wav His political stance was conservative, and he was particularly close to margaret thatcher.
+en_happy_prompt.wav You know, I just finished that big project and feel so relieved. Everything seems easier and more colorful, what a wonderful feeling!	
+fear_zh_female_prompt.wav   我总觉得，有人在跟着我，我能听到奇怪的脚步声。
+whisper_prompt.wav  比如在工作间隙，做一些简单的伸展运动，放松一下身体，这样，会让你更有精力.
+paralingustic_prompt.wav    我觉得这个计划大概是可行的，不过还需要再仔细考虑一下。
+denoise_prompt.wav  Such legislation was clarified and extended from time to time thereafter. No, the man was not drunk, he wondered how we got tied up with this stranger. Suddenly, my reflexes had gone. It's healthier to cook without sugar.
+speed_prompt.wav    上次你说鞋子有点磨脚，我给你买了一双软软的鞋垫。
+vad_prompt.wav  就是说你比如说我一共在这次看病我一共花了一百块钱，其中呢医生的这个劳动价值占了三十块钱。

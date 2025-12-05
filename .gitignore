@@ -1,0 +1,29 @@
+__pycache__/
+output/
+quantization/*.json
+sparse_logs/
+
+# 临时文件和用户隐私音频
+tmp_*.wav
+tmp_*.mp3
+tmp_*.flac
+tmp_*.txt
+*.tmp
+*_user_*.wav
+*_user_*.mp3
+*_private_*.wav
+*_private_*.mp3
+
+# 用户上传的音频文件（避免误提交隐私内容）
+uploads/
+user_audio/
+private_audio/
+# 模型文件（大文件，不应提交到 git）
+models/
+*.pt
+*.bin
+*.onnx
+*.safetensors
+
+# 缓存文件
+cache/

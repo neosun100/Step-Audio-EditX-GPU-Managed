@@ -1,0 +1,48 @@
+--- a/tokenizer.py
++++ b/tokenizer.py
+@@ -1,6 +1,12 @@
+ import io
+ import threading
+ import time
+ import os
+ 
++# ========== 快速优化 1: 启用 TF32 加速 ==========
++import torch
++torch.backends.cuda.matmul.allow_tf32 = True
++torch.backends.cudnn.allow_tf32 = True
++torch.backends.cudnn.benchmark = True
++
+ import numpy as np
+ import torch
+ import torchaudio
+@@ -16,11 +22,11 @@ from model_loader import model_loader, ModelSource
+ 
+ class StepAudioTokenizer:
+     def __init__(
+         self,
+         encoder_path,
+         model_source=ModelSource.AUTO,
+-        funasr_model_id="dengcunqin/speech_paraformer-large_asr_nat-zh-cantonese-en-16k-vocab8501-online"
++        funasr_model_id="damo/speech_paraformer-base_asr_nat-zh-cn-16k-common-vocab8404"  # ← 优化 2: 使用轻量模型
+     ):
+         """
+         Initialize StepAudioTokenizer
+@@ -55,11 +61,16 @@ class StepAudioTokenizer:
+ 
+         self.kms = torch.tensor(np.load(kms_path))
+ 
++        # ========== 快速优化 3: 优化 ONNX Runtime 配置 ==========
+         providers = ["CUDAExecutionProvider"]
+         session_option = onnxruntime.SessionOptions()
+         session_option.graph_optimization_level = (
+             onnxruntime.GraphOptimizationLevel.ORT_ENABLE_ALL
+         )
+-        session_option.intra_op_num_threads = 1
++        session_option.intra_op_num_threads = 4      # ← 从 1 改为 4
++        session_option.inter_op_num_threads = 2       # ← 新增
++        session_option.execution_mode = (             # ← 新增
++            onnxruntime.ExecutionMode.ORT_PARALLEL
++        )
+         self.ort_session = onnxruntime.InferenceSession(
+             cosy_tokenizer_path, sess_options=session_option, providers=providers
+         )

@@ -1,0 +1,15 @@
+--- tokenizer.py
++++ tokenizer.py
+@@ -1,6 +1,12 @@
+ import io
+ import threading
+ import time
+ import os
+ 
++# ========== 快速优化 1: 启用 TF32 加速 ==========
++import torch
++torch.backends.cuda.matmul.allow_tf32 = True
++torch.backends.cudnn.allow_tf32 = True
++torch.backends.cudnn.benchmark = True
++
+ import numpy as np
