@@ -109,12 +109,15 @@ class EditxTab:
         try:
             # Use common_tts_engine for cloning
             self.add_log("📥 输入验证通过，开始克隆...")
+            
+            # Extract actual keys first
+            actual_edit_info = get_edit_info_key(edit_info) if edit_info else None
+            
             self.add_log(f"🔍 任务类型: {edit_type} -> {actual_type}")
             self.add_log(f"🔍 子任务: {edit_info} -> {actual_edit_info if edit_info else 'None'}")
             clone_start = time.time()
             
             # Check if this is a two-step operation
-            actual_edit_info = get_edit_info_key(edit_info) if edit_info else None
             if actual_type in {"clone_with_emotion", "clone_with_style"}:
                 # Step 1: Clone with new text
                 self.add_log(f"🔄 Step 1/2: 克隆新文本...")
