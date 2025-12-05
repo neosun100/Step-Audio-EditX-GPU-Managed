@@ -132,8 +132,8 @@ class GPUManagedTTS:
             # 无论成功还是失败，都要卸载
             self._offload_after_use()
     
-    def edit(self, prompt_wav_path: str, prompt_text: str, target_text: str,
-             edit_type: str, edit_info: Optional[str] = None, intensity: float = 1.0, **kwargs):
+    def edit(self, input_audio_path: str, audio_text: str, edit_type: str,
+             edit_info: Optional[str] = None, text: Optional[str] = None, **kwargs):
         """
         音频编辑（带 GPU 管理）
         
@@ -143,13 +143,11 @@ class GPUManagedTTS:
         try:
             tts = self._get_tts()
             result = tts.edit(
-                prompt_wav_path=prompt_wav_path,
-                prompt_text=prompt_text,
-                target_text=target_text,
+                input_audio_path=input_audio_path,
+                audio_text=audio_text,
                 edit_type=edit_type,
                 edit_info=edit_info,
-                intensity=intensity,
-                **kwargs
+                text=text
             )
             return result
         except Exception as e:
