@@ -301,13 +301,25 @@ python test_gpu_management.py
 
 ## 📝 Changelog
 
-### 2025-12-05: GPU Memory Management 🎮
+### 2025-12-05: GPU Memory Management & UI Improvements 🎮
 
+**GPU Memory Management:**
 - ✅ Implemented lazy loading for all models (TTS, Whisper, FunASR)
 - ✅ Added automatic GPU↔CPU offloading
 - ✅ Reduced startup memory from 40GB to 3MB (99.99%)
 - ✅ Added idle timeout monitoring (configurable)
 - ✅ Created comprehensive documentation
+
+**Bug Fixes:**
+- ✅ Fixed `edit()` method parameter mismatch
+- ✅ Fixed `NoneType` error on second edit operation
+- ✅ Ensured models are loaded before use in all code paths
+
+**UI Enhancements:**
+- ✅ Added bilingual (English/Chinese) labels for all UI elements
+- ✅ Task and Sub-task dropdowns now show both languages
+- ✅ Example: "emotion (情感)", "happy (开心)"
+- ✅ Improved user experience for Chinese users
 
 ### 2025-12-04: Unified Deployment 🚀
 
