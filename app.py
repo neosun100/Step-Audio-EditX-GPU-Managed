@@ -187,14 +187,40 @@ class EditxTab:
             actual_edit_type = get_edit_type_key(edit_type)
             actual_edit_info = get_edit_info_key(edit_info) if edit_info else None
             
+            # Handle clone_with_emotion and clone_with_style (two-step process)
+            if actual_edit_type in {"clone_with_emotion", "clone_with_style"}:
+                # Step 1: Clone with new text
+                self.add_log(f"🔄 Step 1/2: Cloning with new text...")
+                cloned_audio, cloned_sr = common_tts_engine(
+                    tts_text=generated_text,
+                    prompt_text=text_to_use,
+                    prompt_speech_16k=audio_to_edit
+                )
+                
+                # Save cloned audio to temp file
+                if isinstance(cloned_audio, torch.Tensor):
+                    cloned_numpy = cloned_audio.cpu().numpy().squeeze()
+                else:
+                    cloned_numpy = cloned_audio
+                temp_cloned_path = save_audio("cloned_temp", cloned_numpy, cloned_sr, self.args.tmp_dir)
+                
+                # Step 2: Apply emotion or style
+                self.add_log(f"🎨 Step 2/2: Applying {actual_edit_type.split('_')[-1]}...")
+                edit_type_for_step2 = "emotion" if "emotion" in actual_edit_type else "style"
+                output_audio, output_sr = common_tts_engine.edit(
+                    temp_cloned_path, generated_text, edit_type_for_step2, actual_edit_info, generated_text
+                )
             # For para-linguistic, use generated_text; otherwise use source text
-            if actual_edit_type not in {"paralinguistic"}:
+            elif actual_edit_type not in {"paralinguistic"}:
                 generated_text = text_to_use
-
-            # Use common_tts_engine for editing
-            output_audio, output_sr = common_tts_engine.edit(
-                audio_to_edit, text_to_use, actual_edit_type, actual_edit_info, generated_text
-            )
+                output_audio, output_sr = common_tts_engine.edit(
+                    audio_to_edit, text_to_use, actual_edit_type, actual_edit_info, generated_text
+                )
+            else:
+                # paralinguistic case
+                output_audio, output_sr = common_tts_engine.edit(
+                    audio_to_edit, text_to_use, actual_edit_type, actual_edit_info, generated_text
+                )
 
             if output_audio is not None and output_sr is not None:
                 # Convert tensor to numpy if needed

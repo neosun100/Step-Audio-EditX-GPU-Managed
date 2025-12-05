@@ -12,6 +12,23 @@ def get_supported_edit_types():
     """
     return {
         "clone (克隆)": [],
+        "clone_with_emotion (克隆+情感)": [
+            'happy (开心)', 'angry (生气)', 'sad (悲伤)', 'humour (幽默)', 
+            'confusion (困惑)', 'disgusted (厌恶)', 'empathy (同情)', 
+            'embarrass (尴尬)', 'fear (恐惧)', 'surprised (惊讶)', 
+            'excited (兴奋)', 'depressed (沮丧)', 'coldness (冷漠)', 
+            'admiration (钦佩)'
+        ],
+        "clone_with_style (克隆+风格)": [
+            'serious (严肃)', 'arrogant (傲慢)', 'child (童声)', 'older (老年)', 
+            'girl (少女)', 'pure (纯净)', 'sister (御姐)', 'sweet (甜美)', 
+            'ethereal (空灵)', 'whisper (耳语)', 'gentle (温柔)', 'recite (朗诵)', 
+            'generous (大方)', 'act_coy (撒娇)', 'warm (温暖)', 'shy (害羞)', 
+            'comfort (安慰)', 'authority (权威)', 'chat (聊天)', 'radio (播音)', 
+            'soulful (深情)', 'story (讲故事)', 'vivid (生动)', 'program (节目)', 
+            'news (新闻)', 'advertising (广告)', 'roar (咆哮)', 'murmur (低语)', 
+            'shout (喊叫)', 'deeply (深沉)', 'loudly (响亮)', 'exaggerated (夸张)'
+        ],
         "emotion (情感)": [
             'happy (开心)', 'angry (生气)', 'sad (悲伤)', 'humour (幽默)', 
             'confusion (困惑)', 'disgusted (厌恶)', 'empathy (同情)', 
@@ -32,7 +49,9 @@ def get_supported_edit_types():
         ],
         "vad (语音活动检测)": [],
         "denoise (降噪)": [],
-        "paralinguistic (副语言)": [],
+        "paralinguistic (副语言)": [
+            "natural (自然)", "expressive (富有表现力)", "casual (随意)"
+        ],
         "speed (语速)": [
             "faster (更快)", "slower (更慢)", 
             "more faster (非常快)", "more slower (非常慢)"
